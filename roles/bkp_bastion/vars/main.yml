@@ -1,0 +1,9 @@
+---
+# vars file for roles/bkp_bastion
+    dirs:
+      - dir: /etc/ansible
+        bkpfile: /tmp/etc_ansible.gz
+      - dir: /etc/yum.repos.d
+        bkpfile: /tmp/etc_yum.repos.d.gz
+    destbackup: backup
+    listpkg: /tmp/packages.txt

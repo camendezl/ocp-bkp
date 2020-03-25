@@ -1,0 +1,17 @@
+---
+# vars file for roles/bkp_master_nodes
+    dirs:
+      - dir: /etc/origin
+        bkpfile: /tmp/etc_origin.gz
+      - dir: /etc/sysconfig
+        bkpfile: /tmp/etc_sysconfig.gz
+      - dir: /etc/cni
+        bkpfile: /tmp/etc_cni.gz
+      - dir: /etc/dnsmasq.conf
+        bkpfile: /tmp/etc_dnsmasq.conf.gz
+      - dir: /etc/dnsmasq.d
+        bkpfile: /tmp/etc_dnsmasq.d.gz
+      - dir: /etc/pki/ca-trust/source/anchors
+        bkpfile: /tmp/etc_pki_ca-trust_source_anchors.gz
+    destbackup: backup
+    listpkg: /tmp/packages.txt

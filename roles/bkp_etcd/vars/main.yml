@@ -1,0 +1,7 @@
+---
+# vars file for roles/bkp_etcd
+    dirs:
+      - dir: /etc/etcd
+        bkpfile: /tmp/etc_etcd.gz
+    destbackup: backup
+    snapshotetcd: /tmp/snapshot.db

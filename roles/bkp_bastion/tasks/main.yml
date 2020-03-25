@@ -1,0 +1,17 @@
+---
+# tasks file for roles/bkp_bastion
+    - name: Compress directories
+      archive:
+        path: "{{ item.dir }}"
+        dest: "{{ item.bkpfile }}"
+      loop: "{{ dirs }}"
+    - name: Download backups
+      fetch:
+        src: "{{ item.bkpfile }}"
+        dest: "{{ destbackup }}"
+      loop: "{{ dirs }}"
+    - name: Remove backup on master servers
+      file: 
+        path: "{{ item.bkpfile }}"
+        state: absent
+      loop: "{{ dirs }}"

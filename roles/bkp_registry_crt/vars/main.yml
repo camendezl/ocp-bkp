@@ -1,0 +1,7 @@
+---
+# vars file for roles/bkp_registry_crt
+    dirs:
+      - dir: /etc/docker/certs.d/
+        bkpfile: /tmp/etc_docker_certs.d.gz
+    destbackup: backup
+

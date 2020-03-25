@@ -1,0 +1,6 @@
+---
+# vars file for roles/bkp_projects
+    dirs:
+      - dir: /tmp/projects
+        bkpfile: /tmp/projects.gz
+    destbackup: backup

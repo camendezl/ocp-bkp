@@ -1,0 +1,32 @@
+---
+# tasks file for roles/bkp_master_nodes
+    - name: Compress directories
+      archive:
+        path: "{{ item.dir }}"
+        dest: "{{ item.bkpfile }}"
+      loop: "{{ dirs }}"
+    - name: Download backups
+      fetch:
+        src: "{{ item.bkpfile }}"
+        dest: "{{ destbackup }}"
+      loop: "{{ dirs }}"
+    - name: Remove backup on master servers
+      file:
+        path: "{{ item.bkpfile }}"
+        state: absent
+      loop: "{{ dirs }}"
+    - name: Generate list of installed packages
+      shell: rpm -qa | sort
+      register: packages
+    - name: Generate {{ listpkg }} file
+      copy:
+        content: "{{ packages['stdout'] }}"
+        dest: "{{ listpkg }}"
+    - name: Download list of installed packages
+      fetch:
+        src: "{{ listpkg }}"
+        dest: "{{ destbackup }}"
+    - name: Remove {{ listpkg }} on master servers
+      file:
+        path: "{{ listpkg }}"
+        state: absent

@@ -1,0 +1,21 @@
+---
+- name: Take backup of masters, nodes and registry certificates
+  hosts: 'all,!nfs'
+  gather_facts: false
+  roles:
+    - bkp_master_nodes
+    - bkp_registry_crt
+- name: Take backup of ETCD data store
+  hosts: etcd
+  roles:
+    - bkp_etcd
+- name: Take backup of Bastion Files
+  hosts: localhost
+  gather_facts: false
+  roles: 
+    - bkp_bastion
+- name: Take backup of the projects or namespaces
+  hosts: '*mas*1*'
+  gather_facts: false
+  roles:
+    - bkp_projects

@@ -1,0 +1,51 @@
+---
+# tasks file for roles/bkp_etcd
+    - name: Compress directories of ETCD configuracion
+      archive:
+        path: "{{ item.dir }}"
+        dest: "{{ item.bkpfile }}"
+      loop: "{{ dirs }}"
+    - name: Download backups
+      fetch:
+        src: "{{ item.bkpfile }}"
+        dest: "{{ destbackup }}"
+      loop: "{{ dirs }}"
+    - name: Remove backup on master servers
+      file:
+        path: "{{ item.bkpfile }}"
+        state: absent
+      loop: "{{ dirs }}"
+    - name: Obtain the etcd endpoint IP address from the static pod manifest
+      shell: >
+        grep https /etc/origin/node/pods/etcd.yaml | cut -d '/' -f3
+      register: etcd_ep
+      changed_when: false
+    - name: Obtain the etcd pod name
+      shell: >
+        oc login -u system:admin > /dev/null &&
+        oc get pods -n kube-system | grep -o '\S*etcd-{{ ansible_facts['nodename'] }}\S*'
+      register: etcd_pod
+    - name: Take a snapshot of the etcd data in the pod
+      shell: >
+        oc project kube-system > /dev/null &&
+        oc exec {{ etcd_pod['stdout'] }} -c etcd --
+        /bin/bash -c "ETCDCTL_API=3
+        etcdctl --cert /etc/etcd/peer.crt
+        --key /etc/etcd/peer.key
+        --cacert /etc/etcd/ca.crt
+        --endpoints {{ etcd_ep['stdout'] }}
+        snapshot save {{ snapshotetcd }}"
+    - name: Extract snapshot
+      shell: >
+        oc rsync {{ etcd_pod['stdout'] }}:{{ snapshotetcd }} /tmp/
+    - name: Delete ETCD snapshot of the container
+      shell: >
+        oc exec {{ etcd_pod['stdout'] }} -c etcd rm {{ snapshotetcd }}
+    - name: Download ETCD snapshot
+      fetch:
+        src: "{{ snapshotetcd }}"
+        dest: "{{ destbackup }}"
+    - name: Remove ETCD snapshot
+      file:
+        path: "{{ snapshotetcd }}"
+        state: absent
