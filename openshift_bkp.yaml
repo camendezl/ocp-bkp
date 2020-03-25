@@ -15,7 +15,7 @@
   roles: 
     - bkp_bastion
 - name: Take backup of the projects or namespaces
-  hosts: '*mas*1*'
+  hosts: masters
   gather_facts: false
   roles:
     - bkp_projects
