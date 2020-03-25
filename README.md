@@ -4,4 +4,4 @@ Este playbook fue desarrollado siguiendo las recomendaciones de la documentació
 
 Para ejecutarlo, ubique el playbook y los roles en la misma carpeta dentro del servidor bastion del clúster de OCP. Luego, ejecute:
 
-# ansible-playbook openshift_bkp.yaml
+ansible-playbook openshift_bkp.yaml
