@@ -19,7 +19,7 @@
           for OBJECT in rolebindings serviceaccounts secrets imagestreamtags cm \
           egressnetworkpolicies rolebindingrestrictions limitranges resourcequotas \
           pvc templates cronjobs statefulsets hpa deployments replicasets \
-          poddisruptionbudget endpoints deploymentconfig;
+          poddisruptionbudget endpoints deploymentconfig buildconfig;
           do
             oc get -o yaml --export $OBJECT > "{{ item.dir }}"/${PROJECT}/$OBJECT.yaml;
           done; 
